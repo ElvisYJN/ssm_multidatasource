@@ -1,0 +1,80 @@
+#YAML配置文件 注意每一组参数中同一级别的参数必须对齐
+#server 配置
+server:
+    tomcat:
+        maxThreads : 500
+        minSpareThreads : 20
+        acceptCount : 500
+    connectionTimeout : 60000
+    port: 8088
+##############druil连接池配置####################
+pool:
+    minIdle : 10
+    maxIdle : 15
+    maxActive : 20
+    initialSize : 1
+
+#针对不同环境配置 下面参数会覆盖上面已有的参数 可以在启动时传入参数覆盖此配置   --spring.profiles.active=pro
+spring.profiles.active: dev
+
+---
+
+spring.profiles: dev
+config:
+    hello: The current application  profile is develop
+registry:
+    id: dev
+
+store:
+       url : jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8
+       username : root
+       password : root
+       driveName : com.mysql.jdbc.Driver
+
+store1:
+       url : jdbc:mysql://127.0.0.1:3306/test1?useUnicode=true&characterEncoding=utf8
+       username : root
+       password : root
+       driveName : com.mysql.jdbc.Driver
+
+#cmsdb:
+#  jdbc:
+#    oracle:
+#        driveName : oracle.jdbc.driver.OracleDriver
+#        url : jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=yes)(FAILOVER=on)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=172.16.33.93)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=172.16.33.94)(PORT=1521)))(FAILOVER=on)(LOAD_BALANCE=off)(CONNECT_DATA=(SERVICE_NAME=cmsdb3)(FAILOVER_MODE=(TYPE=select)(DELAY=5)(METHOD=basic))))
+#        username : xhwdevelop
+#        password : xhwdevelop@#$123
+
+---
+
+spring.profiles: pro
+
+config:
+    hello: The current application  profile is pro
+registry:
+    id: pro
+
+store:
+       url : jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8
+       username : root
+       password : root
+       driveName : com.mysql.jdbc.Driver
+
+store1:
+       url : jdbc:mysql://127.0.0.1:3306/test1?useUnicode=true&characterEncoding=utf8
+       username : root
+       password : root
+       driveName : com.mysql.jdbc.Driver
+
+#cmsdb:
+#  jdbc:
+#    oracle:
+#        driveName : oracle.jdbc.driver.OracleDriver
+#        url : jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=yes)(FAILOVER=on)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=172.16.33.93)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=172.16.33.94)(PORT=1521)))(FAILOVER=on)(LOAD_BALANCE=off)(CONNECT_DATA=(SERVICE_NAME=cmsdb3)(FAILOVER_MODE=(TYPE=select)(DELAY=5)(METHOD=basic))))
+#        username : xhwdevelop
+#        password : xhwdevelop@#$123
+
+
+
+
+

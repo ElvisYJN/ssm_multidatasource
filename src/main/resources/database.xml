@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/tx  
+   http://www.springframework.org/schema/tx/spring-tx.xsd 
+   http://www.springframework.org/schema/aop 
+   http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- mysql库 -->
+	<bean class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" id="storeDataSource" init-method="init" primary="true">
+		<property name="driverClassName" value="${store.driveName}"></property>
+		<property name="url" value="${store.url}"></property>
+		<property name="username" value="${store.username}"></property>
+		<property name="password" value="${store.password}"></property>
+		<property name="initialSize" value="${pool.initialSize}"></property>
+		<property name="minIdle" value="${pool.minIdle}"></property>
+		<property name="maxActive" value="${pool.maxActive}"></property>
+	</bean>
+
+	<!-- mysql库 -->
+	<bean class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" id="storeDataSource1" init-method="init" primary="true">
+		<property name="driverClassName" value="${store1.driveName}"></property>
+		<property name="url" value="${store1.url}"></property>
+		<property name="username" value="${store1.username}"></property>
+		<property name="password" value="${store1.password}"></property>
+		<property name="initialSize" value="${pool.initialSize}"></property>
+		<property name="minIdle" value="${pool.minIdle}"></property>
+		<property name="maxActive" value="${pool.maxActive}"></property>
+	</bean>
+
+	<!-- cms库 -->
+	<!--<bean class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" id="cmsDataSource" init-method="init">
+		<property name="driverClassName" value="${cmsdb.jdbc.oracle.driveName}"></property>
+		<property name="url" value="${cmsdb.jdbc.oracle.url}"></property>
+		<property name="username" value="${cmsdb.jdbc.oracle.username}"></property>
+		<property name="password" value="${cmsdb.jdbc.oracle.password}"></property>
+		<property name="initialSize" value="${pool.initialSize}"></property>
+		<property name="minIdle" value="${pool.minIdle}"></property>
+		<property name="maxActive" value="${pool.maxActive}"></property>
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+	</bean>-->
+
+	<bean class="com.xinhuanet.common.datasource.MultipleDataSource" id="dataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+                <entry key="storeDB" value-ref="storeDataSource"></entry>
+                <entry key="storeDB1" value-ref="storeDataSource1"></entry>
+				<!--<entry key="cmsDB" value-ref="cmsDataSource"></entry>-->
+			</map>
+		</property>
+	</bean>
+
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="com.xinhuanet.entity" />	<!-- 给包entity中起别名 -->
+        <property name="configLocation" value="classpath:mybatis_config.xml" />	<!-- 加载核心配置文件 -->
+	</bean>
+
+    <!-- 扫包中所有的接口，自动生成对应的代理对象 找id为sqlSessionFactory -->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.xinhuanet.mapper" />
+    </bean>-->
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.*.mapper" />
+		<property name="properties">
+			<value>
+				mappers=tk.mybatis.mapper.common.Mapper
+				ORDER=BEFORE
+			</value>
+		</property>
+	</bean>
+
+    <!-- 事物 -->
+	<!-- transaction support -->
+	<!-- PlatformTransactionMnager -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- enable transaction annotation support -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<aop:aspectj-autoproxy />
+
+</beans>
