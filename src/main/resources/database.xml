@@ -76,6 +76,7 @@
     <!-- 事物 -->
 	<!-- transaction support -->
 	<!-- PlatformTransactionMnager -->
+	<!--注意： 事务生效需要在之前手动配置数据源，才会回滚 MultipleDataSource.setDataSourceKey(DatabaseType.dispense.toString()); -->
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
